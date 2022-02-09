@@ -510,7 +510,7 @@ window.viewShape = (key) => {
 
 window.shareShape = () => {
   const code = document.getElementById("code").value.trim();
-  const url = "https://sense101.github.io/ShapezIndustriesViewer?" + code;
+  const url = "https://waffledevsalt.github.io/SEShapeViewer?" + code;
   alert("You can share this url: " + url);
 };
 
