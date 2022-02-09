@@ -1,6 +1,7 @@
 * {
     margin: 0;
     padding: 0;
+    color: #fff;
 }
 
 html,
@@ -13,7 +14,7 @@ body {
     align-content: center;
     justify-content: center;
     font-family: "Barlow", sans-serif;
-    background: #fff;
+    background: #000000;
 }
 
 h1, h2, h3 {
@@ -28,7 +29,7 @@ h1 {
 }
 
 code {
-    background: #fff;
+    background: #111;
     padding: 1px 4px;
 }
 
@@ -42,7 +43,7 @@ a{
     border: 1px solid #ccc;
     margin-top: 10px;
     margin-bottom: 10px;
-    background: #fff;
+    background: #222;
     padding: 40px;
     text-align: center;
 }
@@ -58,7 +59,7 @@ a{
     padding: 30px;
     box-sizing: border-box;
     border: 1px solid #ccc;
-    background: #fff;
+    background: #222;
     font-size: 17px;
 }
 
@@ -113,7 +114,7 @@ button:hover {
 }
 
 .infoBox {
-    background: #eee;
+    background: #222;
     padding: 20px;
 }
 .infoBox h3 {
@@ -124,7 +125,7 @@ ul {
 }
 
 .shapeCodes code {
-    background: #fff;
+    background: #333;
     padding: 2px 5px;
     margin-right: 6px;
 }
