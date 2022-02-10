@@ -384,9 +384,11 @@ function renderShape(layers) {
           
           const moveInwards = dims * 0.4;
           
-          context.moveTo(originX + dims- moveInwards*2, originY + moveInwards);
+          context.moveTo(originX, originY+ dims)
+          context.lineTo(originX + dims- moveInwards*2, originY + moveInwards);
           context.arc(originY + moveInwards,originX + dims- moveInwards,2.9,1.2*Math.PI,2.3*Math.PI);
           context.lineTo(originX + dims- moveInwards, originY + moveInwards*2);
+          context.lineTo(originX, originY+ dims+.1);
           context.lineTo(originX, originY+ dims);
           
           context.closePath();
