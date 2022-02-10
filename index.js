@@ -381,11 +381,14 @@ function renderShape(layers) {
 
           let originX = insetPadding - quadrantHalfSize;
           let originY = -insetPadding + quadrantHalfSize - dims;
-          const moveInwards = dims * 0.1;
-          context.moveTo(originX, originY + moveInwards);
-          context.lineTo(originX + dims, originY + moveInwards);
-          context.lineTo(originX + dims, originY + dims);
-          context.lineTo(originX, originY + dims);
+          
+          const moveInwards = dims * 0.4;
+          
+          context.moveTo(originX + dims- moveInwards*2, originY + moveInwards);
+          context.arc(originY + moveInwards,originX + dims- moveInwards,2.9,1.2*Math.PI,2.3*Math.PI);
+          context.lineTo(originX + dims- moveInwards, originY + moveInwards*2);
+          context.lineTo(originX, originY+ dims);
+          
           context.closePath();
           break;
       }
@@ -545,9 +548,9 @@ window.randomShape = () => {
 	}
 	//empty layer not allowed
 	if(layertext === '--------'){
-		i--;
+	  i--;
 	} else {
-		code = code + layertext + ':';
+	  code = code + layertext + ':';
 	}
   }
   code = code.replace(/:+$/,'');
