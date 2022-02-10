@@ -382,14 +382,16 @@ function renderShape(layers) {
           let originX = insetPadding - quadrantHalfSize;
           let originY = -insetPadding + quadrantHalfSize - dims;
           
-          const moveInwards = dims * 0.4;
+          const moveInwards = dims * 0.1;
+          const circleSize = 4 / (layerIndex+1)
+          const circlePos = dims/2
+					console.log(circlePos + ' ' + layerIndex)
+
+					context.moveTo(originX, originY +dims - moveInwards);
+          context.arc(originY + circlePos,originX +dims- circlePos,circleSize,1.1*Math.PI,2.4*Math.PI);
           
-          context.moveTo(originX, originY+ dims)
-          context.lineTo(originX + dims- moveInwards*2, originY + moveInwards);
-          context.arc(originY + moveInwards,originX + dims- moveInwards,2.9,1.2*Math.PI,2.3*Math.PI);
-          context.lineTo(originX + dims- moveInwards, originY + moveInwards*2);
-          context.lineTo(originX, originY+ dims+.1);
-          context.lineTo(originX, originY+ dims);
+          context.lineTo(originX + moveInwards, originY + dims);
+          context.lineTo(originX, originY + dims);
           
           context.closePath();
           break;
@@ -402,10 +404,8 @@ function renderShape(layers) {
           let originX = insetPadding - quadrantHalfSize;
           let originY = -insetPadding + quadrantHalfSize - dims;
           const moveInwards = dims * 0.4;
-          const moveOutwards = dims * 0.8;
           context.moveTo(originX, originY + moveInwards);
-          context.lineTo(originX + dims, originY);
-          context.lineTo(originX + moveOutwards, originY + dims);
+          context.lineTo(originX + dims, originY + dims);
           context.lineTo(originX, originY + dims);
           context.closePath();
           break;
