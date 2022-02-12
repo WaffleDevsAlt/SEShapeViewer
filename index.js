@@ -503,6 +503,13 @@ function renderShape(layers) {
 }
 
 /////////////////////////////////////////////////////
+window.addEventListener("load", () => {
+  if (window.location.search) {
+    const key = window.location.search.substr(1);
+    document.getElementById("code").value = key;
+  }
+  generate();
+});
 
 function showError(msg) {
   const errorDiv = document.getElementById("error");
