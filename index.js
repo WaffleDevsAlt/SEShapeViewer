@@ -505,7 +505,7 @@ function renderShape(layers) {
 /////////////////////////////////////////////////////
 window.addEventListener("load", () => {
   if (window.location.search) {
-    const key = window.location.search.substr(1);
+    let key = window.location.search.substr(1);
   	key.replace(/%3/g, ':')
     document.getElementById("code").value = key;
   }
