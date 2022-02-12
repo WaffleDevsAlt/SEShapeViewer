@@ -11,14 +11,15 @@ const enumSubShape = {
   circle: "circle",
   star: "star",
   windmill: "windmill",
-  
+
   diamond: "diamond",
   octagon: "octagon",
   ekips: "ekips",
   gem: "gem",
   flower: "flower",
-  twist: "twist",
-  arch: "arch"
+  lightning: "lightning",
+  arch: "arch",
+  wave: "wave"
 };
 
 /** @enum {string} */
@@ -27,14 +28,16 @@ const enumSubShapeToShortcode = {
   [enumSubShape.circle]: "C",
   [enumSubShape.star]: "S",
   [enumSubShape.windmill]: "W",
-  
+
   [enumSubShape.diamond]: "D",
   [enumSubShape.octagon]: "O",
   [enumSubShape.ekips]: "E",
   [enumSubShape.gem]: "G",
   [enumSubShape.flower]: "F",
-  [enumSubShape.twist]: "T",
-  [enumSubShape.arch]: "A"
+  [enumSubShape.lightning]: "L",
+  [enumSubShape.arch]: "A",
+  [enumSubShape.wave]: "V"
+
 };
 
 /** @enum {enumSubShape} */
@@ -43,11 +46,22 @@ for (const key in enumSubShapeToShortcode) {
   enumShortcodeToSubShape[enumSubShapeToShortcode[key]] = key;
 }
 
-const arrayQuadrantIndexToOffset = [
-  { x: 1, y: -1 }, // tr
-  { x: 1, y: 1 }, // br
-  { x: -1, y: 1 }, // bl
-  { x: -1, y: -1 }, // tl
+const arrayQuadrantIndexToOffset = [{
+    x: 1,
+    y: -1
+  }, // tr
+  {
+    x: 1,
+    y: 1
+  }, // br
+  {
+    x: -1,
+    y: 1
+  }, // bl
+  {
+    x: -1,
+    y: -1
+  }, // tl
 ];
 
 // From colors.js
@@ -63,7 +77,7 @@ const enumColors = {
 
   white: "white",
   uncolored: "uncolored",
-  black:'black'
+  black: 'black'
 };
 
 /** @enum {string} */
@@ -100,7 +114,7 @@ const enumColorsToHexCode = {
   [enumColors.white]: "#ffffff",
 
   [enumColors.uncolored]: "#aaaaaa",
-  
+
   [enumColors.black]: '#333333'
 };
 
@@ -110,7 +124,7 @@ for (const key in enumColorToShortcode) {
   enumShortcodeToColor[enumColorToShortcode[key]] = key;
 }
 
-CanvasRenderingContext2D.prototype.beginCircle = function (x, y, r) {
+CanvasRenderingContext2D.prototype.beginCircle = function(x, y, r) {
   if (r < 0.05) {
     this.beginPath();
     this.rect(x, y, 1, 1);
@@ -138,22 +152,22 @@ function fromShortKey(key) {
   if (sourceLayers.length > maxLayer) {
     throw new Error("Only " + maxLayer + " layers allowed");
   }
-  
+
   let layers = [];
   for (let i = 0; i < sourceLayers.length; ++i) {
     const text = sourceLayers[i];
     if (text.length !== 8) {
       throw new Error("Invalid layer: '" + text + "' -> must be 8 characters");
     }
-    
+
     if (text === "--".repeat(4)) {
       throw new Error("Empty layers are not allowed");
     }
-    
+
     if (!layerRegex.test(text)) {
       throw new Error("Invalid syntax in layer " + (i + 1));
     }
-    
+
     const quads = [null, null, null, null];
     for (let quad = 0; quad < 4; ++quad) {
       const shapeText = text[quad * 2 + 0];
@@ -211,7 +225,10 @@ function renderShape(layers) {
       if (!quadrants[quadrantIndex]) {
         continue;
       }
-      const { subShape, color } = quadrants[quadrantIndex];
+      const {
+        subShape,
+        color
+      } = quadrants[quadrantIndex];
 
       const quadrantPos = arrayQuadrantIndexToOffset[quadrantIndex];
       const centerQuadrantX = quadrantPos.x * quadrantHalfSize;
@@ -241,7 +258,7 @@ function renderShape(layers) {
 
           break;
         }
-        
+
         case enumSubShape.star: {
           context.beginPath();
           const dims = quadrantSize * layerScale;
@@ -290,7 +307,7 @@ function renderShape(layers) {
           break;
         }
 
-				case enumSubShape.diamond: {
+        case enumSubShape.diamond: {
           context.beginPath();
           const dims = quadrantSize * layerScale;
 
@@ -298,55 +315,55 @@ function renderShape(layers) {
           let originY = -insetPadding + quadrantHalfSize - dims;
           const moveInwards = dims * 0.1;
           const starPosition = dims * 0.55;
-          
+
           context.moveTo(originX, originY);
-          context.lineTo(originX+0.27, originY);
-          context.lineTo(originX+dims, originY+dims-0.27);
-          context.lineTo(originX+dims, originY+dims);
-					context.lineTo(originX, originY+dims);
+          context.lineTo(originX + 0.27, originY);
+          context.lineTo(originX + dims, originY + dims - 0.27);
+          context.lineTo(originX + dims, originY + dims);
+          context.lineTo(originX, originY + dims);
           context.closePath();
           break;
-      }
+        }
 
-      	case enumSubShape.octagon: {
+        case enumSubShape.octagon: {
           context.beginPath();
           const dims = quadrantSize * layerScale;
 
           let originX = insetPadding - quadrantHalfSize;
           let originY = -insetPadding + quadrantHalfSize - dims;
-          const moveInwards = dims * 0.5;          
+          const moveInwards = dims * 0.5;
           context.moveTo(originX, originY);
-          context.lineTo(originX+moveInwards, originY);
-          context.lineTo(originX+dims, originY+moveInwards);
-          context.lineTo(originX+dims, originY+dims);
-          context.lineTo(originX, originY+dims);
+          context.lineTo(originX + moveInwards, originY);
+          context.lineTo(originX + dims, originY + moveInwards);
+          context.lineTo(originX + dims, originY + dims);
+          context.lineTo(originX, originY + dims);
           context.closePath();
           break;
-      }
+        }
 
-      	case enumSubShape.ekips: {
+        case enumSubShape.ekips: {
           context.beginPath();
           const dims = quadrantSize * layerScale;
 
           let originX = insetPadding - quadrantHalfSize;
           let originY = -insetPadding + quadrantHalfSize - dims;
           const moveInwards = dims * 0.4;
-					const moveOutwards = dims*1.4
-          
+          const moveOutwards = dims * 1.4
+
           context.moveTo(originX, originY + dims); //bottomleft
-          context.lineTo(originX + dims , originY + dims);//bottomright
-          context.lineTo(originX + dims , originY + dims-0.27);//bottomright2
-          context.lineTo(originX + moveInwards , originY - moveInwards + dims); //center
-          context.lineTo(originX+.27, originY)//topleft2
+          context.lineTo(originX + dims, originY + dims); //bottomright
+          context.lineTo(originX + dims, originY + dims - 0.27); //bottomright2
+          context.lineTo(originX + moveInwards, originY - moveInwards + dims); //center
+          context.lineTo(originX + .27, originY) //topleft2
           context.lineTo(originX, originY) //topleft
 
 
 
           context.closePath();
           break;
-      }
+        }
 
-      	case enumSubShape.gem: {
+        case enumSubShape.gem: {
           context.beginPath();
           const dims = quadrantSize * layerScale;
 
@@ -354,90 +371,124 @@ function renderShape(layers) {
           let originY = -insetPadding + quadrantHalfSize - dims;
           const moveInwards = dims * 0.4;
           const moveInwards2 = dims * 0.3;
-          
+
           context.moveTo(originX, originY);
-          context.lineTo(originX+0.27, originY);
-          
-          context.lineTo(originX +0.27+moveInwards2, originY -0.27+moveInwards2);
-          
+          context.lineTo(originX + 0.27, originY);
+
+          context.lineTo(originX + 0.27 + moveInwards2, originY - 0.27 + moveInwards2);
+
           context.lineTo(originX + dims - moveInwards, originY);
           context.lineTo(originX + dims, originY);
           context.lineTo(originX + dims, originY + moveInwards);
-          
-          context.lineTo(originX +0.27+dims-moveInwards2, originY -0.27+dims-moveInwards2);
-          
-          context.lineTo(originX+dims, originY+dims-0.27);
-          context.lineTo(originX+dims, originY+dims);
-          
-					context.lineTo(originX, originY+dims);
-          
-          context.closePath();
-          break;
-      }
 
-      	case enumSubShape.flower: {
-          context.beginPath();
-          const dims = quadrantSize * layerScale;
+          context.lineTo(originX + 0.27 + dims - moveInwards2, originY - 0.27 + dims - moveInwards2);
 
-          let originX = insetPadding - quadrantHalfSize;
-          let originY = -insetPadding + quadrantHalfSize - dims;
-          
-          const moveInwards = dims * 0.1;
-          const circleSize = 4 / (layerIndex+1)
-          const circlePos = dims/2
-					console.log(circlePos + ' ' + layerIndex)
-
-					context.moveTo(originX, originY +dims - moveInwards);
-          context.arc(originY + circlePos,originX +dims- circlePos,circleSize,1.1*Math.PI,2.4*Math.PI);
-          
-          context.lineTo(originX + moveInwards, originY + dims);
-          context.lineTo(originX, originY + dims);
-          
-          context.closePath();
-          break;
-      }
-
-      	case enumSubShape.twist: {
-          context.beginPath();
-          const dims = quadrantSize * layerScale;
-
-          let originX = insetPadding - quadrantHalfSize;
-          let originY = -insetPadding + quadrantHalfSize - dims;
-          const moveInwards = dims * 0.4;
-          context.moveTo(originX, originY + moveInwards);
+          context.lineTo(originX + dims, originY + dims - 0.27);
           context.lineTo(originX + dims, originY + dims);
+
           context.lineTo(originX, originY + dims);
+
           context.closePath();
           break;
-      }
-      
-      	case enumSubShape.arch: {
-      		context.beginPath();
+        }
+
+        case enumSubShape.flower: {
+          context.beginPath();
+          const quadrantHalfSize = quadrantSize / 2;
+          let originX = -quadrantHalfSize;
+          let originY = quadrantHalfSize;
+          const dims = quadrantSize * layerScale;
+          context.beginPath();
+          context.moveTo(originX, originY);
+          context.arcTo(
+            originX,
+            originY - dims * 2,
+            originX + dims,
+            originY - dims / 2.5,
+            quadrantHalfSize * layerScale / 1.2,
+          );
+          context.arcTo(
+            originX + dims * 2,
+            originY,
+            originX,
+            originY,
+            quadrantHalfSize * layerScale / 1.2
+          )
+          context.closePath();
+          break;
+        }
+
+        case enumSubShape.lightning: {
+        	context.beginPath();
+        	const quadrantHalfSize = quadrantSize / 2;
+          let originX = -quadrantHalfSize;
+          let originY = quadrantHalfSize;
+          const dims = quadrantSize * layerScale;
+          context.beginPath();
+          context.moveTo(originX, originY - dims * .6);
+          context.lineTo(originX + dims / 3, originY - dims / 2);
+          context.lineTo(originX + dims, originY - dims);
+          context.lineTo(originX + dims * .7, originY);
+          context.lineTo(originX, originY);
+          context.closePath();
+          break;
+        }
+
+        case enumSubShape.arch: {
+          context.beginPath();
           const dims = quadrantSize * layerScale;
 
           let originX = insetPadding - quadrantHalfSize;
           let originY = -insetPadding + quadrantHalfSize;
 
           context.moveTo(originX, originY - dims);
-          context.lineTo(originX + dims / 2.5, originY-dims);
+          context.lineTo(originX + dims / 2.5, originY - dims);
           context.arcTo(
-          	originX,
+            originX,
             originY,
             originX + dims,
             originY - dims / 2.5,
             quadrantHalfSize * layerScale / 1.2,
           )
-          context.lineTo(originX + dims , originY - dims / 2.5);
-          context.lineTo(originX + dims , originY);
+          context.lineTo(originX + dims, originY - dims / 2.5);
+          context.lineTo(originX + dims, originY);
           context.lineTo(originX, originY);
           context.closePath();
           break;
-      }
+        }
+
+        case enumSubShape.wave: {
+          context.beginPath();
+          const quadrantHalfSize = quadrantSize / 2;
+          let originX = -quadrantHalfSize;
+          let originY = quadrantHalfSize;
+          const dims = quadrantSize * layerScale;
+          context.beginPath();
+          context.moveTo(originX, originY - dims);
+          context.arcTo(
+            originX + dims / 2,
+            originY - dims * 1.25,
+            originX + dims,
+            originY - dims,
+            quadrantSize * layerScale,
+          );
+          context.arcTo(
+            originX,
+            originY,
+            originX + dims,
+            originY,
+            quadrantHalfSize * layerScale * .9,
+          );
+          context.lineTo(originX + dims, originY);
+          context.lineTo(originX, originY);
+          context.closePath();
+          break;
+        }
 
         default: {
           assertAlways(false, "Unkown sub shape: " + subShape);
         }
-        
+
       }
 
       context.fill();
@@ -523,13 +574,13 @@ function getRandomInt(max) {
   return Math.floor(Math.random() * Math.floor(max));
 }
 
-function getRandomShape(){
-	let shapes = Object.values(enumSubShapeToShortcode);
-	shapes.push('-');
+function getRandomShape() {
+  let shapes = Object.values(enumSubShapeToShortcode);
+  shapes.push('-');
   return shapes[getRandomInt(shapes.length)];
 }
 
-function getRandomColor(){
+function getRandomColor() {
   return Object.values(enumColorToShortcode)[getRandomInt(Object.keys(enumColorToShortcode).length)];
 }
 
@@ -537,25 +588,25 @@ window.randomShape = () => {
   let layers = getRandomInt(maxLayer);
   let code = '';
   for (var i = 0; i <= layers; i++) {
-	let layertext = '';
-	for (var y = 0; y <= 3; y++) {
-		let randomShape = getRandomShape();
-		let randomColor = getRandomColor();
-		
-		if(randomShape === '-') {
-			randomColor = '-';
-			console.log('in');
-		}
-		layertext = layertext + randomShape + randomColor;
-	}
-	//empty layer not allowed
-	if(layertext === '--------'){
-	  i--;
-	} else {
-	  code = code + layertext + ':';
-	}
+    let layertext = '';
+    for (var y = 0; y <= 3; y++) {
+      let randomShape = getRandomShape();
+      let randomColor = getRandomColor();
+
+      if (randomShape === '-') {
+        randomColor = '-';
+        console.log('in');
+      }
+      layertext = layertext + randomShape + randomColor;
+    }
+    //empty layer not allowed
+    if (layertext === '--------') {
+      i--;
+    } else {
+      code = code + layertext + ':';
+    }
   }
-  code = code.replace(/:+$/,'');
+  code = code.replace(/:+$/, '');
   document.getElementById("code").value = code;
   generate();
 }
